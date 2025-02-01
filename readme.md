@@ -3,6 +3,7 @@
   <img src="public/assets/synth-logo.svg" alt="Synth Email Logo" width="200"/>
 </p>
 
+
 An AI-powered email management system that seamlessly integrates a modern web client with a robust Spring Boot backend, offering intelligent email handling and management capabilities.
 
 ## 🌟 Overview
