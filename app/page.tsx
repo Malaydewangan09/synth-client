@@ -1,6 +1,7 @@
 "use client"
 import React from "react"
 import { useState } from "react"
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { FcGoogle } from "react-icons/fc"
