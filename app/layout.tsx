@@ -1,25 +1,16 @@
 import "./globals.css"
 import { Inter } from 'next/font/google'
-import Image from 'next/image'
-import Link from 'next/link'
-
+import { Toaster } from 'sonner'
+import { AIProvider } from '@/contexts/ai-context'
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-inter',
+  variable: '--font-sans',
 })
 
 export const metadata = {
-  title: 'Sign up - Synth',
+  title: 'Synth',
   description: 'AI-powered email management',
-  icons: {
-    icon: [
-      {
-        url: '/assets/synth-logo.svg',
-        href: '/assets/synth-logo.svg',
-      }
-    ]
-  }
 }
 
 export default function RootLayout({
@@ -28,8 +19,14 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className="min-h-screen bg-black antialiased">{children}</body>
+    <html lang="en" className={inter.variable}>
+      
+      <body className="min-h-screen bg-black font-sans antialiased">
+      <AIProvider>
+          {children}
+          <Toaster />
+        </AIProvider>
+      </body>
     </html>
   )
 }

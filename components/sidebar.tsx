@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { Plus } from 'lucide-react'
 import { BsMicrosoft } from "react-icons/bs"
 import { Book , Cog} from 'lucide-react'
+import { LucideIcon } from 'lucide-react'
 
 import {
   DropdownMenu,
@@ -126,20 +127,31 @@ import { Settings, LayoutGrid } from 'lucide-react'
 import { HomeIcon } from "lucide-react"
 
 interface SidebarProps {
-  onViewChange: (view: string) => void;
-  userEmail: string;
+  selectedView: string
+  setCurrentView: (view: string) => void
+  items: {
+    id: string
+    label: string
+    icon: LucideIcon
+    description: string
+  }[]
+  userEmail: string
+  isProcessing: boolean
 }
 
-export function Sidebar(props: SidebarProps) {
-  const { onViewChange = () => {}, userEmail = '' } = props;
-  console.log('Sidebar props:', { onViewChange: typeof onViewChange, userEmail });
-
-  // Remove the userEmail state since it's now a prop
+export function Sidebar({
+  selectedView,
+  setCurrentView,
+  items,
+  userEmail,
+  isProcessing
+}: SidebarProps) {
+  // Remove this line as we're already getting userEmail from props
+  // const { onViewChange = () => {}, userEmail = '' } = props;
+  
   const [emailContext, setEmailContext] = useState<EmailContext[]>([])
   const [showIntegrateModal, setShowIntegrateModal] = useState(false)
-  // const [showMemoriesModal, setShowMemoriesModal] = useState(false);
-  // Add this state
-  const [connectedEmail, setConnectedEmail] = useState<string>('');
+  const [connectedEmail, setConnectedEmail] = useState<string>('')
   const handleGoogleAuth = () => {
     window.location.href = 'http://localhost:8080/oauth2/authorization/google'
   }
@@ -422,76 +434,28 @@ const generateEmail = async () => {
             </div>
           </div>
     
-          <div className="flex-1 min-h-0 overflow-y-auto">
-            <div className="space-y-1">
-              {/* Quick Actions */}
-              <div className="mt-3 space-y-1">
+          <div className="space-y-1 mt-6">
+            {items.map((item) => {
+              const Icon = item.icon
+              return (
                 <Button
+                  key={item.id}
                   variant="ghost"
-                  className="w-full justify-start text-white/70 hover:text-white hover:bg-white/10"
-                  onClick={() => onViewChange('home')}
+                  className={`w-full justify-start ${
+                    selectedView === item.id
+                      ? 'bg-white/10 text-white'
+                      : 'text-white/70 hover:text-white hover:bg-white/10'
+                  }`}
+                  onClick={() => setCurrentView(item.id)}
                 >
-                  <HomeIcon className="mr-2 h-4 w-4" />
-                  Home
+                  <Icon className="mr-2 h-4 w-4" />
+                  {item.label}
                 </Button>
-              
-              <Button
-                variant="ghost"
-                className="w-full justify-start text-white/70 hover:text-white hover:bg-white/10"
-                onClick={() => onViewChange('integrations')}
-              >
-                <LayoutGrid className="mr-2 h-4 w-4" />
-                Integrations
-              </Button>
-
-              <Button
-      variant="ghost"
-      className="w-full justify-start text-white/70 hover:text-white hover:bg-white/10"
-      onClick={() => onViewChange('memories')}
-    >
-      <Book className="mr-2 h-4 w-4" />
-      Memories
-    </Button>
-
-              <Button
-      variant="ghost"
-      className="w-full justify-start text-white/70 hover:text-white hover:bg-white/10"
-      onClick={() => onViewChange('automation')}
-    >
-      <Book className="mr-2 h-4 w-4" />
-      Automation
-    </Button>
-
-    <Button
-      variant="ghost"
-      className="w-full justify-start text-white/70 hover:text-white hover:bg-white/10"
-      onClick={() => onViewChange('settings')} // Changed from 'setting' to 'settings'
-    >
-      <Cog className="mr-2 h-4 w-4" />
-      Settings
-    </Button>
-
-             <Button 
-                variant="ghost" 
-                className="w-full justify-start text-white/70 hover:text-white hover:bg-white/10"
-                onClick={() => onViewChange('calendar')}
-              >
-                <Calendar className="mr-2 h-4 w-4 flex-shrink-0" />
-                <span className="truncate">Calendar</span>
-              </Button>
-
-              <Button
-                variant="ghost"
-                className="w-full justify-start text-white/70 hover:text-white hover:bg-white/10"
-                onClick={() => onViewChange('ai-chat')}
-              >
-                <Bot className="mr-2 h-4 w-4" />
-                Synth AI
-              </Button>
-            </div>
+              )
+            })}
           </div>
         </div>
-        </div>
+      
     
         {/* Move the modal components here */}
         <Dialog open={showComposeModal} onOpenChange={setShowComposeModal}>

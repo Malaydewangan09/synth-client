@@ -3,55 +3,30 @@
 import * as React from "react"
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
-import { Mail, Brain, Zap, Clock } from 'lucide-react'
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
-import { formatDistanceToNow } from 'date-fns'
 import { ScrollArea } from "./ui/scroll-area"
-
-// Add import at the top
+import { formatDistanceToNow } from 'date-fns'
 import { EmailDetailModal } from "./email-detail-modal"
+import { PanelRightOpen } from "lucide-react"
+import { Button } from "./ui/button"
 
 export function HomeView() {
-  // Add these state declarations after the existing ones
   const [selectedEmail, setSelectedEmail] = useState<any>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
-
-  const [stats, setStats] = useState({
-    totalEmails: 0,
-    aiAssisted: 0,
-    automated: 0,
-    avgResponseTime: '0min'
-  })
-  // Modify emailActivity state to include categories
-  const [emailActivity, setEmailActivity] = useState([
-    { date: '2024-01', personal: 15, work: 25, promotional: 10 },
-    { date: '2024-02', personal: 20, work: 30, promotional: 8 },
-    { date: '2024-03', personal: 25, work: 35, promotional: 12 },
-  ])
   const [recentEmails, setRecentEmails] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(true)
 
   useEffect(() => {
-    // Fetch stats
-    fetch('http://localhost:8080/auth/stats', {
-      credentials: 'include'
-    })
-      .then(res => res.json())
-      .then(setStats)
-      .catch(console.error)
-
-    // Fetch emails
     fetch('http://localhost:8080/auth/emails', {
       credentials: 'include'
     })
       .then(res => res.json())
       .then(data => {
-        // Ensure data is an array, otherwise use empty array
         setRecentEmails(Array.isArray(data) ? data : [])
       })
       .catch(error => {
         console.error('Failed to fetch emails:', error)
-        setRecentEmails([]) // Set empty array on error
+        setRecentEmails([])
       })
       .finally(() => setIsLoading(false))
   }, [])
@@ -59,7 +34,6 @@ export function HomeView() {
   const formatEmailDate = (dateString: string) => {
     try {
       const date = new Date(dateString)
-      // Check if date is valid
       if (isNaN(date.getTime())) {
         return 'Date unavailable'
       }
@@ -69,109 +43,44 @@ export function HomeView() {
     }
   }
 
+  const getGreeting = () => {
+    const hour = new Date().getHours()
+    if (hour < 12) return 'Good morning'
+    if (hour < 17) return 'Good afternoon'
+    return 'Good evening'
+  }
+
   return (
-    <div className="space-y-6 p-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="bg-black/40 border-white/10">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Mail className="h-5 w-5" />
-              Total Emails
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">{stats.totalEmails}</p>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-black/40 border-white/10">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Brain className="h-5 w-5" />
-              AI Assisted
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">{stats.aiAssisted}</p>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-black/40 border-white/10">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Zap className="h-5 w-5" />
-              Automated
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">{stats.automated}</p>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-black/40 border-white/10">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Clock className="h-5 w-5" />
-              Avg Response Time
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">{stats.avgResponseTime}</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Modified Email Activity Chart */}
-        <Card className="bg-black/20 backdrop-blur-sm border-white/5">
-          <CardHeader>
-            <CardTitle className="text-white/80">Email Activity by Category</CardTitle>
-          </CardHeader>
-          <CardContent className="h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={emailActivity}>
-                <XAxis dataKey="date" stroke="#ffffff40" />
-                <YAxis stroke="#ffffff40" />
-                <Tooltip 
-                  contentStyle={{ 
-                    background: '#000000dd',
-                    border: '1px solid rgba(255,255,255,0.1)'
-                  }}
-                />
-                <Line 
-                  type="monotone" 
-                  dataKey="work" 
-                  stroke="#818cf8" 
-                  strokeWidth={2}
-                  name="Work"
-                />
-                <Line 
-                  type="monotone" 
-                  dataKey="personal" 
-                  stroke="#34d399" 
-                  strokeWidth={2}
-                  name="Personal"
-                />
-                <Line 
-                  type="monotone" 
-                  dataKey="promotional" 
-                  stroke="#fbbf24" 
-                  strokeWidth={2}
-                  name="Promotional"
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        {/* Modified Recent Emails with ScrollArea */}
-        <Card className="bg-black/20 backdrop-blur-sm border-white/5">
-          <CardHeader>
+    <div className={`fixed inset-0 bg-gradient-to-br from-zinc-900 via-black to-zinc-900 transition-[margin] duration-300 ${
+      sidebarOpen ? 'ml-[250px]' : 'ml-0'
+    }`}>
+      <div className="flex flex-col h-full">
+        <div className="flex flex-col space-y-2 p-8 bg-gradient-to-b from-black/80 via-black/60 to-transparent backdrop-blur-sm sticky top-0 z-10">
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="text-zinc-400 hover:text-white transition-colors"
+            >
+              <PanelRightOpen className="w-5 h-5" />
+            </Button>
+            <div className="flex flex-col">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
+                {getGreeting()}
+              </h1>
+              <p className="text-sm text-zinc-400">Here are your recent emails</p>
+            </div>
+          </div>
+        </div>
+    
+        <Card className="flex-1 bg-black/20 backdrop-blur-sm border-white/5">
+          <CardHeader className="sticky top-0 z-10 bg-black/40 backdrop-blur-md border-b border-white/5">
             <CardTitle className="text-white/80">Recent Emails</CardTitle>
           </CardHeader>
-          <CardContent>
-            <ScrollArea className="h-[400px] pr-4">
-              <div className="space-y-4">
+          <CardContent className="p-0">
+            <ScrollArea className="h-[calc(100vh-12rem)]">
+              <div className="space-y-4 p-6">
                 {isLoading ? (
                   <div className="flex items-center justify-center py-8">
                     <div className="w-6 h-6 border-2 border-white/20 border-t-white/80 rounded-full animate-spin" />
@@ -217,17 +126,16 @@ export function HomeView() {
             </ScrollArea>
           </CardContent>
         </Card>
+    
+        <EmailDetailModal
+          email={selectedEmail}
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false)
+            setSelectedEmail(null)
+          }}
+        />
       </div>
-
-      {/* Add the modal */}
-      <EmailDetailModal
-        email={selectedEmail}
-        isOpen={isModalOpen}
-        onClose={() => {
-          setIsModalOpen(false)
-          setSelectedEmail(null)
-        }}
-      />
     </div>
   )
 }

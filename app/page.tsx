@@ -17,8 +17,8 @@ import { Plus_Jakarta_Sans } from 'next/font/google'
 
 const spaceGrotesk = Space_Grotesk({ 
   subsets: ['latin'],
-  weight: ['700'],
-  variable: '--font-space-grotesk',
+  display: 'swap',
+  variable: '--font-sans',
 })
 
 const jakarta = Plus_Jakarta_Sans({ 
@@ -203,7 +203,7 @@ export default function SignIn() {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-7xl sm:text-8xl font-bold tracking-tight"
+            className="text-7xl sm:text-7xl font-bold tracking-tight"
           >
             Join Synth.
             <br />
@@ -238,7 +238,7 @@ export default function SignIn() {
                 </svg>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-white">Real-time Sync</h3>
+                <h3 className="text-base font-semibold text-white">Real-time Sync</h3>
                 <p className="text-zinc-400">Instant synchronization across all your financial accounts</p>
               </div>
             </div>
@@ -250,19 +250,19 @@ export default function SignIn() {
                 </svg>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-white">Bank-grade Security</h3>
+                <h3 className="text-base font-semibold text-white">Bank-grade Security</h3>
                 <p className="text-zinc-400">Enterprise-level encryption and security protocols</p>
               </div>
             </div>
           </div>
 
           {/* Sign up card */}
-          <Card className="max-w-md flex-1 bg-zinc-900/50 border border-zinc-800 backdrop-blur-xl">
+          <Card className="max-w-md flex-2 bg-zinc-900/50 border border-zinc-800 backdrop-blur-xl">
             <CardHeader className="space-y-2 relative z-10">
-              <CardTitle className="text-2xl text-center font-bold text-indigo-300">
+              <CardTitle className="text-xl text-center font-bold text-indigo-300">
                 Create Account
               </CardTitle>
-              <CardDescription className="text-center text-zinc-400 text-lg">
+              <CardDescription className="text-center text-zinc-400 text-md">
                 Sign up to get started with Synth
               </CardDescription>
             </CardHeader>
@@ -287,7 +287,7 @@ export default function SignIn() {
                     </motion.div>
                   )}
                 </AnimatePresence>
-                <span className="font-medium text-lg">Continue with Google</span>
+                <span className="font-medium text-base">Continue with Google</span>
                 <motion.div
                   animate={{ x: isHovering ? 5 : 0 }}
                   transition={{ duration: 0.2 }}
