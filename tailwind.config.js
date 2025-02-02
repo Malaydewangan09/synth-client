@@ -8,6 +8,9 @@ module.exports = {
     ],
     theme: {
       extend: {
+        fontFamily: {
+          'jakarta': ['var(--font-plus-jakarta)'],
+        },
         colors: {
           border: "hsl(var(--border))",
           background: "hsl(var(--background))",
@@ -36,7 +39,10 @@ module.exports = {
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        'space-grotesk': ['var(--font-space-grotesk)'],
+      },
+    },
   },
-  plugins: [],
 }

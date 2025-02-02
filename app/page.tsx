@@ -11,6 +11,27 @@ import { ArrowRight } from "lucide-react"
 // Add this import at the top
 import Image from 'next/image'
 
+// Add to imports at the top
+import { Space_Grotesk } from 'next/font/google'
+import { Plus_Jakarta_Sans } from 'next/font/google'
+
+const spaceGrotesk = Space_Grotesk({ 
+  subsets: ['latin'],
+  weight: ['700'],
+  variable: '--font-space-grotesk',
+})
+
+const jakarta = Plus_Jakarta_Sans({ 
+  subsets: ['latin'],
+  weight: ['700'],
+  variable: '--font-plus-jakarta',
+})
+
+const handleClick = () => {
+    window.location.href = "http://localhost:8080/oauth2/authorization/google"
+
+}
+
 const BackgroundAnimation = () => {
   const particles = React.useMemo(() => 
     Array.from({ length: 40 }).map((_, i) => ({
@@ -63,86 +84,186 @@ export default function SignIn() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [isHovering, setIsHovering] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   React.useEffect(() => {
+    // Simulate loading time
+    const timer = setTimeout(() => {
+      setIsLoading(false)
+    }, 2000)
+
     // Check for OAuth success token in URL
     const token = searchParams.get('token')
     if (token) {
-      // Store the token
       localStorage.setItem('auth_token', token)
-      // Redirect to dashboard
       router.push('/dashboard')
     }
+
+    
+
+    return () => clearTimeout(timer)
   }, [searchParams, router])
 
-  const handleClick = () => {
-    window.location.href = "http://localhost:8080/oauth2/authorization/google"
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-zinc-950">
+        <motion.div
+          animate={{ 
+            rotate: 360,
+            scale: [1, 1.1, 1]
+          }}
+          transition={{
+            rotate: {
+              duration: 2,
+              ease: "linear",
+              repeat: Infinity,
+            },
+            scale: {
+              duration: 2,
+              repeat: Infinity,
+            }
+          }}
+        >
+          <Image
+            src="/assets/synth-logo.svg"
+            alt="Synth Logo"
+            width={128}
+            height={128}
+            className="w-32 h-32"
+          />
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+          className="mt-6 text-indigo-300 text-2xl font-medium"
+        >
+          {/* <span className="text-white/80">Synth</span> */}
+        </motion.div>
+      </div>
+    )
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-black text-white relative overflow-hidden selection:bg-purple-500/30">
+    <div className={`min-h-screen flex flex-col bg-zinc-950 text-white relative overflow-hidden selection:bg-indigo-500/20 ${spaceGrotesk.variable}`}>
       <BackgroundAnimation />
       
+      {/* Logo in top left */}
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5 }}
+        className="absolute top-8 left-8 z-20 flex items-center space-x-1"
+      >
+        <motion.div
+          animate={{ rotate: [0, 360] }}
+          transition={{
+            duration: 30,
+            ease: "linear",
+            repeat: Number.POSITIVE_INFINITY,
+          }}
+        >
+          <Image
+            src="/assets/synth-logo.svg"
+            alt="Synth Logo"
+            width={32}
+            height={32}
+            className="w-8 h-8"
+          />
+        </motion.div>
+        <h2 className="text-3xl font-medium text-white/90 font-inter tracking-tight">
+          Synth
+        </h2>
+      </motion.div>
+
+      {/* Login link in top right */}
+      <motion.div
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5 }}
+        className="absolute top-8 right-8 z-20"
+      >
+        <div className="text-zinc-400">
+          Already have an account?{" "}
+          <a href="/login" className="text-indigo-400 hover:text-indigo-300 font-medium ml-2">
+            Log in
+          </a>
+        </div>
+      </motion.div>
+
+      {/* Main content */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
-        className="relative z-10 max-w-5xl w-full px-4 space-y-16"
+        className="relative z-10 max-w-5xl w-full px-4 space-y-16 mx-auto h-screen flex flex-col items-center justify-center"
       >
         <div className="text-center space-y-8">
-          <motion.div
-            initial={{ scale: 0.5, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="flex items-center justify-center space-x-3 mb-12"
-          >
-            <motion.div
-              animate={{ rotate: [0, 360] }}
-              transition={{
-                duration: 20,
-                ease: "linear",
-                repeat: Number.POSITIVE_INFINITY,
-              }}
-            >
-              <Image
-                src="/assets/synth-logo.svg"
-                alt="Synth Logo"
-                width={48}
-                height={48}
-                className="w-12 h-12"
-              />
-            </motion.div>
-            <h2 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-purple-600">
-              Synth
-            </h2>
-          </motion.div>
-
           <motion.h1
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.3 }}
             className="text-7xl sm:text-8xl font-bold tracking-tight"
           >
-            Seamless Sync.
+            Join Synth.
             <br />
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-purple-500 to-purple-600">
-              Simple Pay
+            <span className="text-indigo-400">
+              Start Free
             </span>
           </motion.h1>
+          
+          {/* Added subtitle */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="text-xl text-zinc-400 max-w-2xl mx-auto"
+          >
+            Streamline your financial operations with automated sync and smart payments
+          </motion.p>
         </div>
 
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.5 }}
+          className="w-full max-w-4xl flex flex-col md:flex-row gap-8 items-center"
         >
-          <Card className="max-w-md mx-auto bg-black/40 border border-white/10 backdrop-blur-xl shadow-2xl">
+          {/* Feature highlights */}
+          <div className="flex-1 space-y-6">
+            <div className="flex items-start space-x-4">
+              <div className="p-2 rounded-lg bg-indigo-500/10">
+                <svg className="w-6 h-6 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-white">Real-time Sync</h3>
+                <p className="text-zinc-400">Instant synchronization across all your financial accounts</p>
+              </div>
+            </div>
+            
+            <div className="flex items-start space-x-4">
+              <div className="p-2 rounded-lg bg-indigo-500/10">
+                <svg className="w-6 h-6 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-white">Bank-grade Security</h3>
+                <p className="text-zinc-400">Enterprise-level encryption and security protocols</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Sign up card */}
+          <Card className="max-w-md flex-1 bg-zinc-900/50 border border-zinc-800 backdrop-blur-xl">
             <CardHeader className="space-y-2 relative z-10">
-              <CardTitle className="text-3xl text-center font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-purple-600">
-                Get Started
+              <CardTitle className="text-2xl text-center font-bold text-indigo-300">
+                Create Account
               </CardTitle>
-              <CardDescription className="text-center text-white/60 text-lg">
-                Sign in to access your account
+              <CardDescription className="text-center text-zinc-400 text-lg">
+                Sign up to get started with Synth
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6 relative z-10">
@@ -151,7 +272,7 @@ export default function SignIn() {
                 onClick={handleClick}
                 onMouseEnter={() => setIsHovering(true)}
                 onMouseLeave={() => setIsHovering(false)}
-                className="w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white h-14 flex items-center justify-center gap-3 hover:opacity-90 transition-all duration-300 border-0 rounded-md shadow-xl hover:shadow-purple-500/20 transform hover:-translate-y-1"
+                className="w-full bg-indigo-500 text-white h-12 flex items-center justify-center gap-3 hover:bg-indigo-600 transition-all duration-300 border-0 rounded-md"
               >
                 <AnimatePresence>
                   {isHovering && (
@@ -160,7 +281,7 @@ export default function SignIn() {
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -10 }}
                       transition={{ duration: 0.2 }}
-                      className="absolute left-4"
+                      className="absolute left-11"
                     >
                       <FcGoogle className="w-6 h-6" />
                     </motion.div>
@@ -170,24 +291,34 @@ export default function SignIn() {
                 <motion.div
                   animate={{ x: isHovering ? 5 : 0 }}
                   transition={{ duration: 0.2 }}
-                  className="absolute right-4"
+                  className="absolute right-11"
                 >
                   <ArrowRight className="w-5 h-5" />
                 </motion.div>
               </Button>
 
-              <p className="text-center text-sm text-white/40 px-4">
+              <p className="text-center text-sm text-zinc-500 px-4">
                 By signing in, you agree to our{" "}
-                <a href="#" className="text-purple-400 hover:text-purple-300 underline transition-colors duration-200">
+                <a href="#" className="text-indigo-400 hover:text-indigo-300 underline transition-colors duration-200">
                   Terms of Service
                 </a>{" "}
                 and{" "}
-                <a href="#" className="text-purple-400 hover:text-purple-300 underline transition-colors duration-200">
+                <a href="#" className="text-indigo-400 hover:text-indigo-300 underline transition-colors duration-200">
                   Privacy Policy
                 </a>
               </p>
             </CardContent>
           </Card>
+        </motion.div>
+
+        {/* Added social proof */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.7 }}
+          className="text-center space-y-4"
+        >
+         
         </motion.div>
       </motion.div>
     </div>

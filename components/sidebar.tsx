@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Button } from "./ui/button"
-import { Inbox, Send, FileText, Star, AlertCircle, Archive, Mail, Calendar } from 'lucide-react'
+import { Inbox, Send, FileText, Star, AlertCircle, Archive, Mail, Calendar, Bot } from 'lucide-react'
 import { SiGmail } from 'react-icons/si'
 import Link from 'next/link'
 import { Plus } from 'lucide-react'
@@ -39,9 +39,6 @@ interface SidebarItem {
   active?: boolean;
 }
 
-const sidebarItems: SidebarItem[] = [
-  { icon: Inbox, label: "Inbox", active: true },
-];
 
 const getCookie = (name: string) => {
   const value = `; ${document.cookie}`;
@@ -481,6 +478,15 @@ const generateEmail = async () => {
               >
                 <Calendar className="mr-2 h-4 w-4 flex-shrink-0" />
                 <span className="truncate">Calendar</span>
+              </Button>
+
+              <Button
+                variant="ghost"
+                className="w-full justify-start text-white/70 hover:text-white hover:bg-white/10"
+                onClick={() => onViewChange('ai-chat')}
+              >
+                <Bot className="mr-2 h-4 w-4" />
+                Synth AI
               </Button>
             </div>
           </div>

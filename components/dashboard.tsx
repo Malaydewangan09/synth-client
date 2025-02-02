@@ -8,6 +8,8 @@ import { AutomationView } from './automation-view'
 import { SettingsView } from './settings-view'
 import { Sidebar } from './sidebar'
 import { CalendarView } from './calendar-view'
+// Add import
+import { AIChatView } from './ai-chat-view'
 
 export function Dashboard() {
   const [currentView, setCurrentView] = useState('home')
@@ -35,6 +37,7 @@ export function Dashboard() {
     setCurrentView(view)
   }
 
+  // In your renderView function or similar
   const renderView = () => {
     switch (currentView) {
       case 'home':
@@ -49,6 +52,8 @@ export function Dashboard() {
         return <SettingsView />
       case 'calendar':
         return <CalendarView />
+      case 'ai-chat':
+        return <AIChatView />
       default:
         return <HomeView />
     }
@@ -58,12 +63,7 @@ export function Dashboard() {
     <div className="flex h-screen bg-black text-white">
       <Sidebar onViewChange={handleViewChange} userEmail={userEmail} />
       <main className="flex-1 overflow-auto p-8">
-        {currentView === 'home' && <HomeView />}
-        {currentView === 'integrations' && <IntegrationsView />}
-        {currentView === 'memories' && <MemoriesView />}
-        {currentView === 'automation' && <AutomationView />}
-        {currentView === 'settings' && <SettingsView />}
-        {currentView === 'calendar' && <CalendarView />}
+        {renderView()}
       </main>
     </div>
   )
