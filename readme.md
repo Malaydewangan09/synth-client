@@ -3,9 +3,6 @@
   <img src="public/assets/synth-logo.svg" alt="Synth Email Logo" width="200"/>
 </p>
 
-<img width="1440" alt="Screenshot 2025-02-02 at 1 28 45 AM" src="https://github.com/user-attachments/assets/545e362f-50b4-44f6-b8bc-70d84c515a8b" />
-
-
 An AI-powered email management system that seamlessly integrates a modern web client with a robust Spring Boot backend, offering intelligent email handling and management capabilities.
 
 ## 🌟 Overview
@@ -174,9 +171,13 @@ Feel free to open issues for bug reports or feature requests!
   - Connection pooling
   - Caching strategies
   - Request rate limiting
+ 
+## 📸 Screenshots
+<img width="1440" alt="Screenshot 2025-02-02 at 1 28 45 AM" src="https://github.com/user-attachments/assets/545e362f-50b4-44f6-b8bc-70d84c515a8b" />
 
 ---
 
 <p align="center">
   Crafted with ❤️ by Malay Dewangan
 </p>
+
