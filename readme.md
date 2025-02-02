@@ -173,7 +173,7 @@ Feel free to open issues for bug reports or feature requests!
   - Request rate limiting
  
 ## 📸 Screenshots
-<img width="1440" alt="Screenshot 2025-02-02 at 1 28 45 AM" src="https://github.com/user-attachments/assets/545e362f-50b4-44f6-b8bc-70d84c515a8b" />
+<img width="1440" alt="Screenshot 2025-02-02 at 7 32 39 PM" src="https://github.com/user-attachments/assets/4c3f1254-5d7e-4ce7-b2f7-fdb216275940" />
 
 ---
 
